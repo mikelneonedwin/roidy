@@ -1,0 +1,57 @@
+{
+  "name": "roidy",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production tsx server/main.ts",
+    "build": "vite build && node esbuild.js",
+    "build:all": "npm run build && npm run build:bin",
+    "build:bin": "pkg --compress GZip -t node18.5.0-linux-x64,node18.5.0-macos-x64,node18.5.0-win-x64 -o bin/roidy dist/index.cjs",
+    "build:win": "pkg --compress GZip -t node18.5.0-win-x64 -o bin/roidy.exe dist/index.cjs",
+    "dev": "tsx --watch server/main.ts",
+    "dev:cli": "tsx --watch cli/index.ts",
+    "test:build": "node esbuild.js && echo 'Running build' && node dist/index.cjs"
+  },
+  "adb": {
+    "win": "https://dl.google.com/android/repository/platform-tools-latest-windows.zip",
+    "darwin": "https://dl.google.com/android/repository/platform-tools-latest-darwin.zip",
+    "linux": "https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "conf": "^13.0.1",
+    "cross-env": "^7.0.3",
+    "decompress": "^4.2.1",
+    "express": "^4.18.2",
+    "express-ws": "^5.0.2",
+    "inquirer": "^10.0.1",
+    "ora": "^8.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "shelljs": "^0.8.5",
+    "tsx": "^4.3.0",
+    "typescript": "^5.3.2",
+    "vite-express": "*"
+  },
+  "devDependencies": {
+    "@types/decompress": "^4.2.7",
+    "@types/express": "^4.17.21",
+    "@types/express-ws": "^3.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.9.3",
+    "@types/react": "^18.0.38",
+    "@types/react-dom": "^18.2.16",
+    "@types/shelljs": "^0.8.15",
+    "@vitejs/plugin-react": "^4.2.0",
+    "autoprefixer": "^10.4.19",
+    "esbuild": "^0.23.0",
+    "esbuild-plugin-shelljs": "^1.0.0",
+    "patch-package": "8.0.0",
+    "pkg": "^5.8.1",
+    "postcss": "^8.4.39",
+    "tailwindcss": "^3.4.4",
+    "vite": "^5.0.2"
+  }
+}
