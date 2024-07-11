@@ -1,15 +1,22 @@
 import chalk from "chalk"
 
-export function error(msg: string) {
+export function error(msg: string, exit: boolean = true) {
     console.log(chalk.bgRed.white.bold(" ERROR ") + " " + msg)
-    process.exit(1)
+    if (exit) return process.exit(1)
 }
 
-export const warn = (msg: string) => console.warn(chalk.bgYellow.black.bold(" WARN ") + " " + msg)
+export function warn(msg: string) {
+    return console.warn(chalk.bgYellow.black.bold(" WARN ") + " " + msg)
+}
 
-export const info = (msg: string) => console.info(chalk.bgCyan.black.bold(" INFO ") + " " + msg)
+export function info(msg: string) {
+    return console.info(chalk.bgCyan.white.bold(" INFO ") + " " + msg)
+}
 
-export const dim = (msg: string) => console.log(chalk.white.dim(msg))
+export function dim(msg: string) {
+    return console.log(chalk.white.dim(msg))
+}
 
 export { default as downloadFile } from "./downloadFile.js"
 export { default as exec } from "./exec.js"
+export { default as spinner } from "./spinner.js"

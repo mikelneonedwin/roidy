@@ -1,12 +1,10 @@
-import { downloadFile, warn, error } from "@/utils/index.js"
-import conf from "conf"
+import { adb } from "@/package.json"
+import { downloadFile, error, exec, warn } from "@/utils/index.js"
 import decompress from "decompress"
 import { unlinkSync } from "fs"
 import inquirer from "inquirer"
-import { homedir, platform } from "os"
-import { delimiter, join, resolve } from "path"
-import shell from "shelljs"
-import { adb } from "@/package.json"
+import { platform } from "os"
+import { delimiter, resolve } from "path"
 
 // Add platforms path to
 process.env.PATH =
@@ -14,26 +12,22 @@ process.env.PATH =
     + delimiter
     + process.env.PATH
 
-const config = new conf({
-    projectName: "roidy",
-})
-
-if (!config.get("config")) {
-    config.set("config", true)
-    config.set("download", join(homedir(), "Downloads"))
-}
-
+/**
+ * Makes sure the `adb` command is accessible to the prorgam or try to download it if not
+ */
 export default async function validateAdb() {
     /* CHECK ADB INSTALLATION */
-    if (shell.which("adb")) return;
+    if (exec({
+        win: "where adb",
+        default: "which adb"
+    }).code !== 0) return;
+
     warn("Can't find ADB installation and it is required by the prorgam")
-    const { install } = await inquirer.prompt([
-        {
-            type: "confirm",
-            message: "Do you want to install ADB",
-            name: "install"
-        }
-    ])
+    const { install } = await inquirer.prompt([{
+        type: "confirm",
+        message: "Do you want to install ADB",
+        name: "install"
+    }])
 
     if (!install) throw error("ADB not installed")
 
@@ -43,17 +37,19 @@ export default async function validateAdb() {
 
     // download zip file to bin directory
     const zipPath = resolve("bin", "adb.zip")
+
     // @ts-expect-error, checking has been done to ensure path exists
     await downloadFile(adb[os], zipPath)
         .catch((err: Error) => {
             throw error(err.message)
         })
+
     // decompress zip file
     await decompress(zipPath, resolve("."))
         .catch((err: Error) => {
             throw error(err.message)
         })
+
     // delete downloaded zip file
     unlinkSync(zipPath)
 }
-

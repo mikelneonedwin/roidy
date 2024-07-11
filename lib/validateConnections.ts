@@ -1,25 +1,31 @@
-import { dim, error, exec, info, warn } from "@/utils/index.js"
-import inquirer from "inquirer"
-import ora from "ora"
-import shell from "shelljs"
+import { dim, error, exec, info, spinner as Spinner, warn } from "@/utils/index.js";
+import inquirer from "inquirer";
 
+/**
+ * Scan the computer's network adapters and locate potential devices to connect to
+ * 
+ * Default Gateways are devices that host the network the computer is connected to
+ * potentially an androiod with the hotspot turned on
+ */
 function connectToGateways() {
-    const spinner = ora("Searching for available devices on network").start()
+    const spinner = Spinner("Searching for available devices on network").start()
     const ipconfig = exec("ipconfig")
     if (ipconfig.code !== 0) return spinner.fail(ipconfig.stderr)
 
     // scan the network for default gateways - possible android devices
     const gateways = ipconfig.stdout.match(/default\sgateway.+\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/gi)
-    if (gateways === null) return spinner.fail("No devices found on network")
+    if (gateways === null) return spinner.warn("Found no device on network")
 
     const { length } = gateways
-    spinner.info(`Found ${length} devices${length === 1 ? "" : "s"} on network`)
-    if (!length) return
+    spinner.info(`Found ${length} device${length === 1 ? "" : "s"} on network`)
 
     // attempt to connect to each device via adb
     spinner.start("Connecting")
     const ips = gateways.map((gate: string) => gate.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)![0])
-    ips.forEach((ip: string, index: number) => spinner.text = `Connecting ${index + 1} of ${ips.length}`)
+    ips.forEach((ip: string, index: number) => {
+        spinner.start(`Connecting ${index + 1} of ${ips.length}`)
+        exec(`adb connect ${ip}`)
+    })
 
     devices.splice(0, devices.length);
     devices.push(...getDeviceList())
@@ -40,9 +46,9 @@ async function connectViaUSB() {
 
     info("Turn on developer options on your android")
     dim("visit https://developer.android.com/studio/debug/dev-options for help")
-    console.log("Connect your android to your PC via a working USB cable")
-    console.log("If a debugging prompt shows up on your android, follow the prompts to enable the connection")
-    console.log("Your PC and Android might momentarily experience a disconnect")
+    dim("Connect your android to your PC via a working USB cable")
+    dim("If a debugging prompt shows up on your android, follow the prompts to enable the connection")
+    dim("Your PC and Android might momentarily experience a disconnect")
     await inquirer.prompt([{
         message: "Press enter to initiate connection",
         type: "input",
@@ -72,7 +78,7 @@ async function connectViaUSB() {
 
     if (source) {
         connectToGateways()
-        if (!devices.length) shell.exit(1)
+        if (!devices.length) process.exit(1)
     } else {
         dim("IP address should be available at System>About>IP Address")
         async function getIP() {
@@ -112,5 +118,5 @@ export default async function validateConnections() {
         connectToGateways()
     }
     if (!devices.length) await connectViaUSB()
-    if(!devices.length) throw error("No devices connected!")
+    if (!devices.length) throw error("No devices connected!")
 }
