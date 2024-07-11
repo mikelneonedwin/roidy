@@ -14,6 +14,7 @@ class Spinner {
                 this.stream.write(msg)
             }
         })
+        this.spinner.setSpinnerString(18)
     }
 
     start(msg?: string) {

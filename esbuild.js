@@ -1,7 +1,18 @@
 import { build } from "esbuild"
-import { shellJsPlugin } from "esbuild-plugin-shelljs";
+import { Spinner } from "cli-spinner"
+import chalk from "chalk"
 
-console.log("Bundling dist/index.cjs")
+const spinner = new Spinner({
+    text: chalk.cyan("Bundling CLI script"),
+    stream: process.stdout,
+    onTick(msg) {
+        this.clearLine(this.stream)
+        this.stream.write(msg)
+    }
+})
+spinner.setSpinnerString(18).start()
+
+const outfile = "dist/index.cjs"
 
 build({
     // minify: true,
@@ -9,12 +20,18 @@ build({
     platform: "node",
     target: "node18",
     bundle: true,
-    outfile: "dist/index.cjs",
+    outfile,
+    minify: true,
     sourcemap: false,
     alias: {
         "@": ".",
-    },
-    plugins: [shellJsPlugin],
+    }
 })
-    .then(() => console.log("Bundled dist/index.cjs"))
-    .catch((err) => console.error("Error: " + err.message))
+    .then(() => {
+        spinner.stop(true)
+        console.log(chalk.green(`Bundled CLI to ${outfile}`))
+    })
+    .catch((err) => {
+        spinner.stop(true)
+        console.error(chalk.red("Error: " + err.message))
+    })

@@ -20,7 +20,7 @@ export default async function validateAdb() {
     if (exec({
         win: "where adb",
         default: "which adb"
-    }).code !== 0) return;
+    }).code === 0) return;
 
     warn("Can't find ADB installation and it is required by the prorgam")
     const { install } = await inquirer.prompt([{
