@@ -3,16 +3,19 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 const app = createSlice({
     name: "app-store",
     initialState: {
-        devices: <Device[]>[],
+        devices: <Record<string, Device>>{},
         main: <Device | null>(null),
         routeError: <RouteError | null>(null)
     },
     reducers: {
         addDevice(state, action: Action<Device | Device[]>) {
-            if (Array.isArray(action.payload))
-                state.devices.push(...action.payload)
+            if (Array.isArray(action.payload)) {
+                action.payload.forEach((device) => {
+                    state.devices[device.id] = device;
+                })
+            }
             else
-                state.devices.push(action.payload)
+                state.devices[action.payload.id] = action.payload
         },
         setMain(state, action: Action<Device | null>) {
             state.main = action.payload
@@ -21,10 +24,7 @@ const app = createSlice({
             state.routeError = action.payload
         },
         removeDevice(state, action: Action<string>) {
-            const index = state.devices.findIndex((device) => {
-                return device.id === action.payload
-            })
-            state.devices.splice(index, 1);
+            delete state.devices[action.payload];
         }
     }
 })

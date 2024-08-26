@@ -65,3 +65,37 @@ interface Action<T> {
 }
 
 type Store = import("@/context").Store
+
+
+interface Step {
+    /**
+     * Content of the step
+     */
+    body: React.ReactNode;
+    /**
+     * Data to be displayed in the step's button
+     */
+    btn?: React.ReactNode;
+    /**
+     * Custom element to be used in place of the default buttons
+     */
+    customBtn?: React.ReactNode;
+}
+
+type MaterialIcon = import("material-icons").MaterialIcon
+
+/**
+ * Props for the <Icon> component
+ */
+interface IconProps extends Omit<React.HTMLAttributes<HTMLElement>, "children"> {
+    /**
+     * Material icon to be displayed in the component
+     */
+    icon: MaterialIcon
+    /**
+     * Icon style
+     * 
+     * @default "outlined"
+     */
+    type?: "outlined" | "sharp" | "two-tone" | "default"
+}

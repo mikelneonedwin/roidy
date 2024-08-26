@@ -4,29 +4,38 @@ import { useState } from "react"
 import { links } from "../../package.json"
 import { useNavigate } from "react-router-dom"
 
-const Step1 = (
-    <>
-        On your Android, make sure <b>Developer Options</b> is turned on.
-        <br /> Visit {` `}
-        <a
-            href={links["dev-options"]}
-            target="_blank"
-            className="hover:underline"
-        >
-            {links["dev-options"]}
-        </a>
-        {` `}for help.
-    </>
-)
+const steps: Step[] = [
+    {
+        body: (
+            <>
+                On your Android, make sure <b>Developer Options</b> is turned on.
+                <br /> Visit {` `}
+                <a
+                    href={links["dev-options"]}
+                    target="_blank"
+                    className="hover:underline"
+                >
+                    {links["dev-options"]}
+                </a>
+                {` `}for help.
+            </>
+        )
+    },
+    {
+        body: "Connect your android to your PC via a working USB cable."
+    },
+    {
+        body: (
+            <>
+                If a debugging prompt appears on your android, follow its instructions to enable the connection.
+                <br /> Once done, click "Connect" to connect your device. Your PC and Android might disconnect momentarily
+            </>
+        ),
+        btn: "Connect"
+    }
+]
 
-const Step2 = "Connect your android to your PC via a working USB cable."
 
-const Step3 = (
-    <>
-        If a debugging prompt shows up on your android, follow the on-screen prompts to enable the connection.
-        <br /> Once done, click "Connect" to connect your device. Your PC and Android might disconnect momentarily
-    </>
-)
 
 const ConnectWithUSB = () => {
     // state
@@ -35,7 +44,6 @@ const ConnectWithUSB = () => {
     const [loading, setLoading] = useState(false);
     const navigateTo = useNavigate();
 
-    const steps = [Step1, Step2, Step3]
     function next() {
         return item === steps.length - 1
             ? connect()
@@ -44,11 +52,13 @@ const ConnectWithUSB = () => {
 
     async function connect() {
         setLoading(true)
-        setError(<span className="!text-lightfont">Connecting...</span>)
+        setError(
+            <span className="!text-lightfont">
+                Connecting...
+            </span>
+        )
         try {
-            const res = await fetch("/api/connect/usb", {
-                method: "POST"
-            })
+            const res = await fetch("/api/connect/usb")
             setLoading(false)
             if (!res.ok) return setError(await res.text());
 
@@ -59,12 +69,12 @@ const ConnectWithUSB = () => {
             Store.dispatch(addDevice(devices));
             Store.dispatch(setMain(devices[0]));
 
-            navigateTo(`/devices/${devices[0]}`)
+            navigateTo(`/devices/${devices[0].id}`)
         }
         catch (err) {
             setLoading(false)
             // @ts-expect-error ...
-            return setError(err.message)
+            setError(err.message)
         }
 
     }
@@ -83,8 +93,8 @@ const ConnectWithUSB = () => {
                     >
                         {error || (
                             <>
-                                <h4 className="text-lg font-semibold">Step {item + 1}</h4>
-                                {steps[item]}
+                                <b className="text-lg font-semibold">Step {item + 1}</b>:
+                                {" "}{steps[item].body}
                             </>
                         )}
                     </p>
@@ -94,10 +104,7 @@ const ConnectWithUSB = () => {
                             className="btn blue"
                             disabled={loading}
                         >
-                            {item === steps.length - 1
-                                ? "Connect"
-                                : "Continue"
-                            }
+                            {steps[item].btn || "Continue"}
                         </button>
                     </div>
                 </div>

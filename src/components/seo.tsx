@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 const Seo = ({ title }: SEOProps) => {
     return (
         <Helmet>
-            {title && <title>{title}</title>}
+            {title && <title>Roidy - {title}</title>}
         </Helmet>
     );
 }
