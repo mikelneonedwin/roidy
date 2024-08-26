@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc -b && vite build",
-    "bun": "bun run server/index.ts",
+    "bun": "bun --watch run server/index.ts",
     "dev": "vite",
     "lint": "eslint .",
     "node": "tsx --tsconfig tsconfig.app.json server/index.ts",
@@ -27,6 +27,7 @@
     "express": "^4.19.2",
     "express-ws": "^5.0.2",
     "inquirer": "^10.1.8",
+    "material-icons": "^1.13.12",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
