@@ -1,0 +1,79 @@
+@import url("./assets/fonts/poppins.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+background-color: #ffffff;
+background-color: #f9f9f9;
+background-color: #242424;
+background-color: #1a1a1a;
+border-color: #646cff;
+color: #747bff;
+color: #213547;
+color: #646cff;
+color: rgba(255, 255, 255, 0.87);
+color: #535bf2; */
+
+* {
+    @apply font-poppins text-lightfont;
+    /* border-red-500 border-solid border; */
+}
+
+body {
+    @apply bg-lightbg;
+}
+
+/* Sidebar styles */
+.sidebar {
+    @apply fixed hidden md:block h-screen py-4 md:w-[20%] bg-white
+}
+
+.sidebar>div {
+    @apply flex flex-col gap-2 p-2;
+}
+
+.sidebar>div>h4 {
+    @apply text-sm font-semibold
+}
+
+/* Progress styles */
+progress {
+    @apply appearance-none bg-white w-full rounded-r-md h-3;
+}
+
+::-webkit-progress-bar {
+    @apply appearance-none bg-white;
+}
+
+::-webkit-progress-value {
+    @apply bg-progress;
+}
+
+::-moz-progress-bar {
+    @apply appearance-none;
+}
+
+/* Button */
+.btn {
+    @apply py-2 w-44 rounded-md shadow-lg whitespace-pre font-medium text-sm text-center;
+}
+
+.btn.blue {
+    @apply bg-blue-500 text-white hover:bg-blue-300 disabled:bg-blue-300 disabled:cursor-not-allowed;
+}
+
+.btn.white {
+    @apply bg-white text-blue-500 hover:bg-white/80
+}
+
+/* Dialog */
+dialog::backdrop {
+    @apply bg-black/30;
+}
+
+/* Section */
+section {
+    @apply w-screen h-screen text-center flex items-center justify-center flex-col gap-4
+}

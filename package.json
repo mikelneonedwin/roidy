@@ -1,0 +1,62 @@
+{
+  "name": "roidy",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "links": {
+    "dev-options": "https://developer.android.com/studio/debug/dev-options"
+  },
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "bun": "bun run server/index.ts",
+    "dev": "vite",
+    "lint": "eslint .",
+    "node": "tsx --tsconfig tsconfig.app.json server/index.ts",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@preact/signals-react": "^2.2.0",
+    "@reduxjs/toolkit": "^2.2.7",
+    "chalk": "^5.3.0",
+    "cli-progress": "^3.12.0",
+    "cli-spinner": "^0.2.10",
+    "commander": "^12.1.0",
+    "conf": "^13.0.1",
+    "cross-env": "^7.0.3",
+    "decompress": "^4.2.1",
+    "express": "^4.19.2",
+    "express-ws": "^5.0.2",
+    "inquirer": "^10.1.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
+    "react-redux": "^9.1.2",
+    "react-router-dom": "^6.26.1",
+    "vite-express": "^0.18.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "@preact/signals-react-transform": "^0.4.0",
+    "@types/cli-progress": "^3.11.6",
+    "@types/cli-spinner": "^0.2.3",
+    "@types/decompress": "^4.2.7",
+    "@types/express": "^4.17.21",
+    "@types/inquirer": "^9.0.7",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.23.1",
+    "eslint": "^9.9.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "globals": "^15.9.0",
+    "pkg": "^5.8.1",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.0.1",
+    "vite": "^5.4.1"
+  }
+}
