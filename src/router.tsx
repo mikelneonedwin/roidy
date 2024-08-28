@@ -1,33 +1,33 @@
 import { createBrowserRouter } from "react-router-dom";
-import { MainLayout, OpenLayout } from "./layouts";
-import { ConnectWirelessly, ConnectWithUSB, Home, NoDevicesConnected } from "./pages";
+import { DeviceLayout, OpenLayout } from "./layouts";
+import { ConnectWirelessly, ConnectWithUSB, Home, Device } from "./pages";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
-    children: [
-      Home,
-    ]
-  },
-  {
-    path: "/",
     element: <OpenLayout />,
     children: [
-      {
-        path: "/no-devices-connected",
-        element: <NoDevicesConnected />
-      },
+      Home,
       {
         path: "/connect/usb",
         element: <ConnectWithUSB />
       },
       {
         path: "/connect/wirelessly",
-        element: <ConnectWirelessly/>
+        element: <ConnectWirelessly />
       }
     ]
-  }
+  },
+  {
+    path: "/device/:id",
+    element: <DeviceLayout />,
+    children: [
+      {
+        index: true,
+        element: <Device/>
+      }
+    ]
+  },
 ])
 
 export default router;

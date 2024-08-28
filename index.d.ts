@@ -66,7 +66,6 @@ interface Action<T> {
 
 type Store = import("@/context").Store
 
-
 interface Step {
     /**
      * Content of the step

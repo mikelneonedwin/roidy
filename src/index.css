@@ -5,8 +5,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-background-color: #ffffff;
+/* background-color: #ffffff;
 background-color: #f9f9f9;
 background-color: #242424;
 background-color: #1a1a1a;
@@ -24,6 +23,7 @@ color: #535bf2; */
 
 body {
     @apply bg-lightbg;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 /* Sidebar styles */
@@ -41,11 +41,11 @@ body {
 
 /* Progress styles */
 progress {
-    @apply appearance-none bg-white w-full rounded-r-md h-3;
+    @apply appearance-none bg-progress/5 w-full rounded-r-md h-3;
 }
 
 ::-webkit-progress-bar {
-    @apply appearance-none bg-white;
+    @apply appearance-none bg-progress/5;
 }
 
 ::-webkit-progress-value {

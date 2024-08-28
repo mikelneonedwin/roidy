@@ -19,16 +19,15 @@ export default function exec(cmd: cmd) {
             stdio: "pipe"
         })
         return {
-            code: 0,
+            error: false,
             stderr: '',
-            stdout: response.toString()
+            stdout: response.toString().trim()
         }
     } catch (error) {
         return {
-            // @ts-expect-error
-            code: error.status,
-            // @ts-expect-error
-            stderr: error.stderr.toString(),
+            error: true,
+            // @ts-expect-error ...
+            stderr: error.stderr.toString().trim(),
             stdout: ''
         }
     }

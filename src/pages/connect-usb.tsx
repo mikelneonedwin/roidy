@@ -69,7 +69,7 @@ const ConnectWithUSB = () => {
             Store.dispatch(addDevice(devices));
             Store.dispatch(setMain(devices[0]));
 
-            navigateTo(`/devices/${devices[0].id}`)
+            navigateTo(`/device/${devices[0].id}`)
         }
         catch (err) {
             setLoading(false)

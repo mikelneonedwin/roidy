@@ -2,7 +2,7 @@ import { error, exec } from "./utils";
 
 export default function getDeviceList(): Device[] {
     const deviceList = exec("adb devices")
-    if (deviceList.code !== 0) throw error(deviceList.stderr)
+    if (deviceList.error) throw error(deviceList.stderr)
     return deviceList
         .stdout
         // remove the undesired parts of the result
@@ -18,10 +18,10 @@ export default function getDeviceList(): Device[] {
         // get the name of the device from the id
         .map((id: string) => {
             const data = exec(`adb -s ${id} shell getprop ro.product.model`)
-            if (data.code !== 0) throw error(data.stderr)
+            if (data.error) throw error(data.stderr)
             return {
                 id,
-                name: data.stdout.trim(),
+                name: data.stdout,
                 connected: true
             }
         });

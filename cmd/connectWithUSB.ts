@@ -3,6 +3,6 @@ import { exec } from "./utils";
 
 export default function ConnectWithUSB(): Device[] {
     const data = exec("adb tcpip 5555")
-    if (data.code !== 0) throw new Error(data.stderr.trim());
+    if (data.error) throw new Error(data.stderr);
     return getDeviceList();
 }

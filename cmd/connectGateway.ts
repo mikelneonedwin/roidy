@@ -10,7 +10,7 @@ export default function connectGateway(): Device[] {
         win: "ipconfig",
         default: "ifconfig"
     })
-    if (data.code !== 0) throw new Error(data.stderr.trim())
+    if (data.error) throw new Error(data.stderr)
     // extract the ip address from the list of gateways
     const ips = data.stdout.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/gi)
     // connect to each

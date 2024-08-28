@@ -8,14 +8,17 @@ const Navbar = () => {
         <nav className="sidebar left-0">
             <div>
                 <h4>Devices</h4>
-                {devices.map((device) => (
-                    <Link
-                        to={"device/" + device.id}
-                        key={device.id}
-                    >
-                        {device.name}
-                    </Link>
-                ))}
+                {Object
+                    .values(devices)
+                    .map((device) => (
+                        <Link
+                            to={"device/" + device.id}
+                            key={device.id}
+                        >
+                            {device.name}
+                        </Link>
+                    ))
+                }
             </div>
             {main && (
                 <div>

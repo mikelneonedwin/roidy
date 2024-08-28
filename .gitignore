@@ -25,4 +25,4 @@ dist-ssr
 
 # Custom
 vite.config.ts.*
-.ts
+i.ts

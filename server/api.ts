@@ -1,27 +1,26 @@
-import { connectGateway, connectViaIp, connectWithUSB, getDeviceList } from "../cmd";
-import { error, exec } from "../cmd/utils";
 import { Router } from "express";
+import {
+    battery,
+    connectGateway,
+    connectViaIp,
+    connectWithUSB,
+    getDeviceList,
+    storage
+} from "../cmd";
+import { error, exec } from "../cmd/utils";
 
 const api = Router();
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-function promisifyError(callback: Function) {
-    return new Promise((resolve, reject) => {
-        try {
-            resolve(callback())
-        } catch (err) {
-            reject(err)
-        }
-    })
-}
-
-function sendError(
-    err: Error,
-    res: ExpressResponse
-) {
-    error(err.message)
-    res.status(500)
-    res.send(err.message)
+function handle(callback: Function, res: ExpressResponse) {
+    try {
+        res.json(callback());
+    } catch (err) {
+        const { message } = err as Error;
+        error(message)
+        res.status(500)
+        res.send(message)
+    }
 }
 
 // list connected devices
@@ -34,11 +33,7 @@ api.get("/api/devices", (
 api.get("/api/connect/usb", (
     _req: ExpressRequest,
     res: ExpressResponse
-) => {
-    promisifyError(connectWithUSB)
-        .then(res.json)
-        .catch((err) => sendError(err, res))
-})
+) => handle(connectWithUSB, res))
 
 // connect to ip addresses detected on the network
 api.get("/api/connect/gateway", (
@@ -55,8 +50,9 @@ api.get("/api/local_ips", (
         win: "ipconfig",
         default: "ifconfig"
     })
-    if (data.code !== 0) return res.json([])
-    const ips = data.stderr.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/gi)
+    const ips = data
+        .stdout
+        .match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/gi)
     res.json(ips || [])
 })
 
@@ -65,5 +61,18 @@ api.get("/api/connect/ip/:ip", (
     req: ExpressRequest,
     res: ExpressResponse
 ) => res.json(connectViaIp(req.params.ip)))
+
+// get info on internal storage
+api.get("/api/storage/:id", (
+    req: ExpressRequest,
+    res: ExpressResponse
+) => handle(() => storage(req.params.id), res))
+
+// get battery info
+api.get("/api/battery/:id", (
+    req: ExpressRequest,
+    res: ExpressResponse
+) => handle(() => battery(req.params.id), res))
+
 
 export default api;
