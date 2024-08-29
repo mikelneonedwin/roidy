@@ -1,8 +1,8 @@
-import { Seo } from "@/components"
+import { Icon, Seo } from "@/components"
 import Store, { addDevice, setMain } from "@/context"
 import { useState } from "react"
 import { links } from "../../package.json"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const steps: Step[] = [
     {
@@ -42,6 +42,8 @@ const ConnectWithUSB = () => {
     const [item, setItem] = useState(0);
     const [error, setError] = useState<React.ReactNode>(null);
     const [loading, setLoading] = useState(false);
+    // indicate whether there was an attempt to connect with the usb
+    const [tried, setTried] = useState(false);
     const navigateTo = useNavigate();
 
     function next() {
@@ -59,11 +61,10 @@ const ConnectWithUSB = () => {
         )
         try {
             const res = await fetch("/api/connect/usb")
-            setLoading(false)
-            if (!res.ok) return setError(await res.text());
+            if (!res.ok) throw new Error(await res.text());
 
             const devices: Device[] = await res.json();
-            if (!devices.length) return setError("No devices found")
+            if (!devices.length) throw new Error("No devices found")
 
             // add devices to store
             Store.dispatch(addDevice(devices));
@@ -72,6 +73,7 @@ const ConnectWithUSB = () => {
             navigateTo(`/device/${devices[0].id}`)
         }
         catch (err) {
+            setTried(true)
             setLoading(false)
             // @ts-expect-error ...
             setError(err.message)
@@ -84,7 +86,16 @@ const ConnectWithUSB = () => {
             <Seo title="Connect Via USB" />
             <section>
                 <div className="flex flex-col gap-4 mx-auto w-3/4">
-                    <h1 className="text-2xl leading-loose font-semibold">Connect Via USB</h1>
+                    <h1 className="text-2xl leading-loose font-semibold">
+                        Connect Via USB
+                        <Icon
+                            icon={(!error === !loading)
+                                ? "usb"
+                                : "usb_off"
+                            }
+                            className="text-3xl block"
+                        />
+                    </h1>
                     <p
                         className={error
                             ? "text-red-500 font-semibold"
@@ -98,7 +109,7 @@ const ConnectWithUSB = () => {
                             </>
                         )}
                     </p>
-                    <div>
+                    <div className="flex gap-4 items-center justify-center">
                         <button
                             onClick={next}
                             className="btn blue"
@@ -106,6 +117,14 @@ const ConnectWithUSB = () => {
                         >
                             {steps[item].btn || "Continue"}
                         </button>
+                        {tried && (
+                            <Link
+                                to="/connect/wirelessly"
+                                className="btn white"
+                            >
+                                Connect Wirelessly
+                            </Link>
+                        )}
                     </div>
                 </div>
             </section>

@@ -7,7 +7,7 @@ import {
     getDeviceList,
     storage
 } from "../cmd";
-import { error, exec } from "../cmd/utils";
+import { error, exec, ip_pattern } from "../cmd/utils";
 
 const api = Router();
 
@@ -15,11 +15,11 @@ const api = Router();
 function handle(callback: Function, res: ExpressResponse) {
     try {
         res.json(callback());
-    } catch (err) {
-        const { message } = err as Error;
-        error(message)
+        // @ts-expect-error ...
+    } catch (err: Error) {
+        error(err)
         res.status(500)
-        res.send(message)
+        res.send(err.message)
     }
 }
 
@@ -50,10 +50,14 @@ api.get("/api/local_ips", (
         win: "ipconfig",
         default: "ifconfig"
     })
-    const ips = data
-        .stdout
-        .match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/gi)
-    res.json(ips || [])
+    if (data.error) {
+        res.status(500)
+        res.send("An unknown error occured")
+        return error(data.stderr)
+    }
+    const match = (x: RegExp) => data.stdout.match(x);
+    const ips = match(new RegExp(ip_pattern, "g"));
+    return res.json(ips || [])
 })
 
 // connect to a device via it's ip address

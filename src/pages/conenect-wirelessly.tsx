@@ -1,7 +1,8 @@
 import { Icon, Seo } from "@/components";
 import Store, { addDevice, setMain } from "@/context";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ip_pattern } from "../../cmd/utils/logger";
 
 const steps: Step[] = [
     {
@@ -98,7 +99,7 @@ const ConnectWirelessly = () => {
      */
     const validateIp = (ip: string) => {
         // enable submit button
-        if (ip.trim().match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/)) {
+        if (new RegExp(`^${ip_pattern}$`).test(ip.trim())) {
             setLoading(false)
             return true;
         };
@@ -183,6 +184,12 @@ const ConnectWirelessly = () => {
                     >
                         {useIp && (
                             <>
+                                <Link
+                                    to="/connect/usb"
+                                    className="btn blue"
+                                >
+                                    Connect via USB
+                                </Link>
                                 <input
                                     required
                                     type="text"
@@ -194,7 +201,7 @@ const ConnectWirelessly = () => {
                                         setError(null)
                                         setLoading(false)
                                     }}
-                                    placeholder="Type here (e.g. 192.168.44.1)"
+                                    placeholder="Type here (e.g. 127.0.0.1)"
                                     className="bg-white rounded-md p-2 focus:outline-blue-300 shadow-md w-60"
                                 />
                                 <datalist id="local_ip">
@@ -213,6 +220,7 @@ const ConnectWirelessly = () => {
                             disabled={loading}
                         >
                             {steps[item].btn || "Continue"}
+                            {useIp ? " IP address" : ""}
                         </button>
                     </form>
                 </div>

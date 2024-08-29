@@ -1,21 +1,26 @@
-import { error, exec } from "./utils";
+import { error, exec, ip_pattern } from "./utils";
 
 export default function getDeviceList(): Device[] {
-    const deviceList = exec("adb devices")
-    if (deviceList.error) throw error(deviceList.stderr)
-    return deviceList
+    const data = exec("adb devices")
+    if (data.error) throw error(data.stderr)
+    const pattern = `(\\w+|${ip_pattern})`
+    return data
         .stdout
-        // remove the undesired parts of the result
-        .replace(/\tdevice/g, "")
-        .replace(/.*list\sof.+\r\n/i, "")
         .trim()
-        // split based on new lines
-        .split(/\r?\n/g)
-        // remove ports from devices identified by ip addesses
-        .map((ip: string) => ip.replace(/:\d+/g, ""))
-        // remove void items from the list
-        .filter(Boolean)
-        // get the name of the device from the id
+        .replace(/list.+attached/i, "")
+        .split(/(\r|\n)/g)
+        .map((txt) => {
+            const pattern_1 = pattern + "(\\s{2,}|$)";
+            const regex = new RegExp(pattern_1, "g");
+            return txt.match(regex)
+        })
+        .flat()
+        .reduce((ids: string[], txt) => {
+            if (!txt) return ids;
+            const regex = new RegExp(pattern);
+            if (regex.test(txt.trim())) ids.push(txt.trim())
+            return ids;
+        }, [])
         .map((id: string) => {
             const data = exec(`adb -s ${id} shell getprop ro.product.model`)
             if (data.error) throw error(data.stderr)

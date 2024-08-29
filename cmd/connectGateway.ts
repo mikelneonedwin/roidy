@@ -1,5 +1,5 @@
 import getDeviceList from "./deviceList";
-import { exec } from "./utils";
+import { exec, ip_pattern } from "./utils";
 
 /**
  * Scans the ip configuration of the computer and
@@ -12,7 +12,7 @@ export default function connectGateway(): Device[] {
     })
     if (data.error) throw new Error(data.stderr)
     // extract the ip address from the list of gateways
-    const ips = data.stdout.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/gi)
+    const ips = data.stdout.match(new RegExp(ip_pattern, "g"))
     // connect to each
     if (ips) ips.forEach((ip) => exec(`adb connect ${ip}`))
     return getDeviceList();

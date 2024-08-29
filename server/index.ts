@@ -10,6 +10,8 @@ app.use(api);
 app.use(errorHandler)
 
 const port = Number(process.env.PORT) || 3000;
-ViteExpress.listen(app, port, () => {
+const server = ViteExpress.listen(app, port, () => {
     console.log(chalk.green(`Server listening on port ${port}`));
 })
+
+process.on("exit", () => server.close())

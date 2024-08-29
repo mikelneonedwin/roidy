@@ -73,7 +73,7 @@ export const Component = () => {
                     </div>
                     <div>
                         <label>
-                            <input type="checkbox" name="show" className="mr-1" />
+                            <input type="checkbox" name="show" className="mr-1 translate-y-[0.103rem]" />
                             Do not show this again
                         </label>
                     </div>

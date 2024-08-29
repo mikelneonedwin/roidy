@@ -26,3 +26,4 @@ dist-ssr
 # Custom
 vite.config.ts.*
 i.ts
+log.json
