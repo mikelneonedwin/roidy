@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "tsc -b && vite build",
+    "build-win": "tsc -b && vite build && node esbuild.js && pkg --compress GZip -t node18.5.0-win-x64 -o bin/roidy.exe dist/server.cjs",
     "bun": "bun --watch run server/index.ts",
     "dev": "vite",
     "lint": "eslint .",

@@ -27,3 +27,4 @@ dist-ssr
 vite.config.ts.*
 i.ts
 log.json
+bin
