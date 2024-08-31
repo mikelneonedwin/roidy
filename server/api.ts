@@ -5,6 +5,7 @@ import {
     connectViaIp,
     connectWithUSB,
     getDeviceList,
+    readdir,
     storage
 } from "../cmd";
 import { error, exec, ip_pattern } from "../cmd/utils";
@@ -19,7 +20,7 @@ function handle(callback: Function, res: ExpressResponse) {
     } catch (err: Error) {
         error(err)
         res.status(500)
-        res.send(err.message)
+        res.send(err.message.replace("adb.exe: ", ""))
     }
 }
 
@@ -78,5 +79,10 @@ api.get("/api/battery/:id", (
     res: ExpressResponse
 ) => handle(() => battery(req.params.id), res))
 
+// read a directory
+api.get("/api/browse/:id/*", (
+    req: ExpressRequest,
+    res: ExpressResponse
+) => handle(() => readdir(req.params.id, req.params[0]), res))
 
 export default api;

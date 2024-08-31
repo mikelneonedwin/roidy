@@ -1,12 +1,11 @@
 import chalk from "chalk"
 
-export function error(err: Error, exit?: boolean) {
+export function error(err: Error) {
     if (process.env.NODE_ENV !== "production") console.error(err)
     console.error(
         chalk.bgRed.white.bold(" ERROR ") +
         ` ${err.message}`
     )
-    if (exit) process.exit(1)
 }
 
 export const warn = (msg: string) =>

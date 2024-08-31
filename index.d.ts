@@ -1,14 +1,16 @@
-interface Device {
-    name: string;
-    id: string;
-    connected: boolean;
-    // battery: string;
-    // storage: {
-    //     capacity: number;
-    //     available: number;
-    // }   
-    // media: string;
-}
+// interface Device {
+//     name: string;
+//     id: string;
+//     connected: boolean;
+//     // battery: string;
+//     // storage: {
+//     //     capacity: number;
+//     //     available: number;
+//     // }   
+//     // media: string;
+// }
+
+type Device = import("./cmd/deviceList").Device[0]
 
 /**
  * Command to be executed with exec function
@@ -98,3 +100,5 @@ interface IconProps extends Omit<React.HTMLAttributes<HTMLElement>, "children"> 
      */
     type?: "outlined" | "sharp" | "two-tone" | "default"
 }
+
+type DirData = import("./cmd/readdir").dirdata

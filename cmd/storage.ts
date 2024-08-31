@@ -13,7 +13,7 @@ import { error, exec } from "./utils";
  * Get information concerning the user's storage drive
  */
 export default function storage(id: string) {
-    const data = exec(`adb -s ${id} shell df /storage/emulated -h`);
+    const data = exec(`adb -s ${id} shell df /data -h`);    
     if (data.error) throw new Error(data.stderr);
     try {
         const [size, used, available, storage] = data

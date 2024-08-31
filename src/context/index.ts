@@ -44,6 +44,4 @@ const Store = configureStore({
 
 export default Store;
 
-type Store = ReturnType<typeof Store["getState"]>;
-
-export type { Store };
+export type Store = ReturnType<typeof Store["getState"]>;w

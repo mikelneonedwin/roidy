@@ -1,8 +1,9 @@
+import chalk from "chalk";
 import express from "express";
 import { resolve } from "path";
-import api from "./api"
-import chalk from "chalk"
-import { errorHandler } from "./utils";
+import { info } from "../cmd/utils";
+import api from "./api";
+import { errorHandler, getPort } from "./utils";
 
 const app: import("express").Express = express();
 
@@ -16,9 +17,9 @@ app.use((_req, res) => {
 })
 app.use(errorHandler)
 
-const port = Number(process.env.PORT) || 3000;
+const port = getPort();
 app.listen(port, () => {
-    console.log(chalk.green(`Server listening on port ${port}`));
+    info(`Server listening on port ${chalk.cyan(port)}`)
 })
 
 export default app;
