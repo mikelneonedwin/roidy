@@ -102,3 +102,20 @@ interface IconProps extends Omit<React.HTMLAttributes<HTMLElement>, "children"> 
 }
 
 type DirData = import("./cmd/readdir").dirdata
+
+/**
+ * Arguments for the callback passed to `downloadFile`
+ * 
+ * @ignore
+ * LINK utils/downloadFile.ts
+ */
+interface DownloadCallbackArgs {
+    /**
+     * Data for what has been downloaded
+     */
+    download: FileSize
+    /**
+     * Size data for the source file that is being downloaded
+     */
+    source: FileSize
+}

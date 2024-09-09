@@ -4,16 +4,19 @@
   "version": "0.0.0",
   "type": "module",
   "links": {
-    "dev-options": "https://developer.android.com/studio/debug/dev-options"
+    "dev-options": "https://developer.android.com/studio/debug/dev-options",
+    "adb-win32": "https://dl.google.com/android/repository/platform-tools-latest-windows.zip",
+    "adb-darwin": "https://dl.google.com/android/repository/platform-tools-latest-darwin.zip",
+    "adb-linux": "https://dl.google.com/android/repository/platform-tools-latest-linux.zip",
+    "platform-tools": "https://developer.android.com/tools/releases/platform-tools"
   },
   "scripts": {
     "build": "tsc -b && vite build",
-    "build-win": "tsc -b && vite build && node esbuild.js && pkg --compress GZip -t node18.5.0-win-x64 -o bin/roidy.exe dist/server.cjs",
     "bun": "bun --watch run server/index.ts",
-    "dev": "vite",
+    "dev": "vite --host",
     "lint": "eslint .",
     "node": "tsx --tsconfig tsconfig.app.json server/index.ts",
-    "preview": "vite preview"
+    "preview": "vite preview --host"
   },
   "dependencies": {
     "@preact/signals-react": "^2.2.0",
@@ -45,6 +48,7 @@
     "@types/decompress": "^4.2.7",
     "@types/express": "^4.17.21",
     "@types/inquirer": "^9.0.7",
+    "@types/node": "^22.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

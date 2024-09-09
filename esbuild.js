@@ -3,19 +3,20 @@ import { Spinner } from "cli-spinner"
 import { build } from "esbuild"
 
 const spinner = new Spinner({
-    text: chalk.cyan("Bundling CLI Script"),
+    text: chalk.cyan("Bundling App"),
     stream: process.stdout,
     onTick(msg) {
         this.clearLine(this.stream)
         this.stream.write(msg)
     }
 })
+
 spinner.setSpinnerString(18).start()
 
-const outfile = "dist/server.cjs"
+const outfile = "dist/app.cjs"
 
 build({
-    entryPoints: ["server/app.ts"],
+    entryPoints: ["app.ts"],
     platform: "node",
     target: "node18",
     bundle: true,
@@ -25,7 +26,7 @@ build({
 })
     .then(() => {
         spinner.stop(true)
-        console.log(chalk.green(`Bundled CLI to ${outfile}`))
+        console.log(chalk.green(`Bundled App to ${outfile}`))
     })
     .catch((err) => {
         spinner.stop(true)

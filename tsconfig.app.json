@@ -32,6 +32,6 @@
     "server",
     "cmd",
     "index.d.ts",
-    "handler"
+    "app.ts"
   ],
 }

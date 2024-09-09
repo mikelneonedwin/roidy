@@ -1,4 +1,4 @@
-import { execSync } from "child_process"
+import { execSync, spawnSync } from "child_process"
 import { platform } from "os"
 import { writeFileSync } from "fs"
 
@@ -27,17 +27,21 @@ function exec(cmd: string) {
         const response = execSync(cmd, {
             stdio: "pipe"
         })
+        // const output = response.toString().trim()
+        // const silentError = /adb(\.exe)?:/.test(output);
         return {
             error: false,
-            stderr: '',
+            stderr: "",
             stdout: response.toString().trim()
         }
-    } catch (error) {
+    } catch (err) {
+        const error = err as ReturnType<typeof spawnSync>;
         return {
             error: true,
-            // @ts-expect-error ...
-            stderr: error.stderr.toString().trim(),
-            stdout: ''
+            stderr:
+                error.stderr.toString().trim() ||
+                error.stdout.toString().trim(),
+            stdout: ""
         }
     }
 }
