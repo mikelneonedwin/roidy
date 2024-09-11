@@ -1,8 +1,11 @@
 package utils
 
-import "regexp"
-import "strconv"
-import "os"
+import (
+	"os"
+	"regexp"
+	"strconv"
+	"fmt"
+)
 
 // mock Array.includes
 func contains(ports []uint64, port uint64) bool {
@@ -16,6 +19,7 @@ func contains(ports []uint64, port uint64) bool {
 
 // look for an available port the server can safely run on
 func GetPort(port *uint64) (uint64, error) {
+	println(Info("Scanning for available ports"))
 	// check which ports are being used
 	win := "netstat -a"
 	data, err := Exec(Cmd{
@@ -47,6 +51,7 @@ func GetPort(port *uint64) (uint64, error) {
 	}
 	// increment port
 	for contains(num_ports, ideal_port) {
+		println(Warn(fmt.Sprintf("Port %d already in use", ideal_port)))
 		ideal_port++
 	}
 	return ideal_port, nil

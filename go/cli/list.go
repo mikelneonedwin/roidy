@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"regexp"
+	"roidy/go/utils"
 	"strings"
-	"roidy/utils"
 )
 
 type Device struct {

@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 	"regexp"
-	"roidy/utils"
+	"roidy/go/utils"
 )
 
 // scan the local network and try connecting to all gateways, assuming one is an available android devices

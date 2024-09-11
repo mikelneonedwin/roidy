@@ -3,8 +3,8 @@ package cli
 import (
 	"fmt"
 	"regexp"
+	"roidy/go/utils"
 	"strconv"
-	"roidy/utils"
 )
 
 func getStatus(data string) string {
@@ -81,7 +81,6 @@ func Battery(id string) (BatteryInfo, error) {
 	level_temp := regexp.MustCompile(`level:\s*(\d+)`).FindStringSubmatch(data)[1]
 	level, err := strconv.ParseUint(level_temp, 10, 8)
 	if err != nil {
-		// panic(err)
 		return BatteryInfo{}, err
 	}
 	return BatteryInfo{

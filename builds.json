@@ -1,0 +1,47 @@
+[
+  {
+    "GOOS": "windows",
+    "GOARCH": "amd64",
+    "desc": "Windows 64-bit"
+  },
+  {
+    "GOOS": "windows",
+    "GOARCH": "386",
+    "desc": "Windows 32-bit"
+  },
+  {
+    "GOOS": "darwin",
+    "GOARCH": "amd64",
+    "desc": "macOS (Intel-based)"
+  },
+  {
+    "GOOS": "darwin",
+    "GOARCH": "arm64",
+    "desc": "macOS (Apple Silicon)"
+  },
+  {
+    "GOOS": "linux",
+    "GOARCH": "amd64",
+    "desc": "Linux 64-bit"
+  },
+  {
+    "GOOS": "linux",
+    "GOARCH": "arm64",
+    "desc": "Linux (ARM 64-bit, Raspberry Pi 4+)"
+  },
+  {
+    "GOOS": "linux",
+    "GOARCH": "arm",
+    "desc": "Linux (ARM 32-bit, Raspberry Pi)"
+  },
+  {
+    "GOOS": "freebsd",
+    "GOARCH": "amd64",
+    "desc": "FreeBSD 64-bit"
+  },
+  {
+    "GOOS": "linux",
+    "GOARCH": "riscv64",
+    "desc": "Linux (RISC-V 64-bit)"
+  }
+]

@@ -2,7 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"roidy/utils"
+	"roidy/go/utils"
 )
 
 func ConnectIp(ip string) ([]Device, error) {

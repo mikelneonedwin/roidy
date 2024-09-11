@@ -1,6 +1,6 @@
 package cli
 
-import "roidy/utils"
+import "roidy/go/utils"
 
 // setup up a connected android device for wireless connection
 func ConnectUsb() ([]Device, error) {

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"roidy/go/utils"
 	"runtime"
 )
 
@@ -24,5 +25,11 @@ func main() {
 		os.Setenv("PATH", updatedPath)
 	}
 
+	// check adb
+	if err := utils.VetAdb(); err != nil {
+		panic(err)
+	}
+
 	Server(nil)
+	println(utils.Info("Initializing server"))
 }

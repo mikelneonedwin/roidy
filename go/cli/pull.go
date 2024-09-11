@@ -1,9 +1,9 @@
 package cli
 
 import (
-	"os"
-	"roidy/utils"
 	"fmt"
+	"os"
+	"roidy/go/utils"
 )
 
 func Pull(id string, source string, dest string) error {

@@ -1,21 +1,22 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
-	"roidy/cli"
-	"roidy/utils"
-
-	// "strings"
+	"roidy/go/cli"
+	"roidy/go/utils"
 	"time"
 
 	"github.com/gorilla/mux"
 )
+
+//go:embed dist/*
+var assets embed.FS
 
 // handle all functions that might have errors
 func handle(callback func() (any, error)) func(w http.ResponseWriter, r *http.Request) {
@@ -45,35 +46,35 @@ func handleInner(w http.ResponseWriter, callback func() (any, error)) {
 	}
 }
 
-// mock Express' res.json
-// func send(data any) func(w http.ResponseWriter, r *http.Request) {
-// 	return func(w http.ResponseWriter, r *http.Request) {
-// 		json.NewEncoder(w).Encode(data)
-// 	}
-// }
+// start server
+func Server(port *uint64) {
+	router := Api()
+	s_port, err := utils.GetPort(port)
+	if err != nil {
+		fmt.Println(utils.Error("Unable to start server: " + err.Error()))
+		os.Exit(1)
+	}
 
-// func serveAssets(prefix string, path string, router *mux.Router) error {
-// 	entries, err := os.ReadDir(path)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	for _, entry := range entries {
-// 		f_path := filepath.Join(path, entry.Name())
-// 		if entry.IsDir() {
-// 			serveAssets(prefix, path, router)
-// 		} else {
-// 			// remove prefix from path
-// 			w_path := strings.Replace(f_path, prefix, "", 1)
-// 			// make path suitable for web
-// 			w_path = strings.ReplaceAll(w_path, `\`, "/")
-// 			// add handler for file
-// 			router.HandleFunc(w_path, func(w http.ResponseWriter, r *http.Request) {
-// 				http.ServeFile(w, r, f_path)
-// 			}).Methods("GET")
-// 		}
-// 	}
-// 	return nil
-// }
+	url := fmt.Sprintf("http://localhost:%v", s_port)
+	fmt.Println(utils.Info(fmt.Sprintf("Server running on port %v \n\tVisit %s in your browser", s_port, url)))
+
+	go func() {
+		// run as routine to start server as fast as possible
+		// auto open in browser
+		win := fmt.Sprintf("start %s", url)
+		mac := fmt.Sprintf("open %s", url)
+		utils.Exec(utils.Cmd{
+			Win: &win,
+			Mac: &mac,
+			Cmd: fmt.Sprintf("xdg-open %s", url),
+		})
+	}()
+
+	if err = http.ListenAndServe(fmt.Sprintf(":%v", s_port), router); err != nil {
+		fmt.Println(utils.Error("Unable to start server: " + err.Error()))
+		os.Exit(1)
+	}
+}
 
 // register endpoints to router
 func Api() *mux.Router {
@@ -170,10 +171,24 @@ func Api() *mux.Router {
 		http.ServeContent(w, r, dest, info.ModTime(), file)
 	}).Methods("GET")
 
-	// add static files or a hello world in place
-	var dir string
-	flag.StringVar(&dir, "dir", filepath.Join("..", "dist"), "Assets path")
-	flag.Parse()
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir(dir))).Methods("GET")
+	// add static files
+	router.HandleFunc("/{path:.*}", func(w http.ResponseWriter, r *http.Request) {
+		path := mux.Vars(r)["path"]
+		// Serve files from the embedded file system
+		file, err := assets.ReadFile("dist/" + path)
+		println("PATH:"+path)
+		if err != nil {
+			// serve index.html if file does not exist
+			file, _ = assets.ReadFile("dist/index.html")
+			println("Serving index.html")
+		} else {
+			println("Serving actual file")
+		}
+		// Set the Content-Type header
+		w.Header().Set("Content-Type", http.DetectContentType(file))
+		// Write the byte slice to the ResponseWriter
+		w.Write(file)
+	})
+
 	return router
 }

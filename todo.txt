@@ -1,3 +1,8 @@
 Install clsx
 Add framer-motion here
 Check what pkg does to process.env.NODE_ENV
+Delete directory for each build recursively
+LEARN EMBED
+Add icons to Go executables
+Fix public assets
+Add notifications on go executable

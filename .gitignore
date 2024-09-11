@@ -33,5 +33,7 @@ notes.txt
 platform-tools
 test.html
 i.go
-roidy.exe
 i.cmd
+*roidy*
+*.exe
+config.json

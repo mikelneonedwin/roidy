@@ -10,16 +10,20 @@ import (
 	"runtime"
 )
 
-func CheckADB() bool {
+func checkAdb() error {
+	println(Info("Checking ADB availability"))
 	win := "where adb"
 	_, err := Exec(Cmd{
 		Win: &win,
 		Cmd: "which adb",
 	})
-	if err != nil {
-		return false
+	if err == nil {
+		println(Info("ADB available ✔"))
+		return nil
 	}
-	return true
+	// download adb
+	println(Warn("ADB not found!"))
+	return downloadAdb()
 }
 
 type adb struct {
@@ -35,8 +39,7 @@ type PackageJson struct {
 }
 
 func get_adb_url() (string, error) {
-	json_path := filepath.Join("..", "..", "package.json")
-	file, err := os.Open(json_path)
+	file, err := os.Open("package.json")
 	if err != nil {
 		return "", err
 	}
@@ -65,24 +68,69 @@ func get_adb_url() (string, error) {
 	}
 }
 
-func DownloadADB() error {
+func downloadAdb() error {
 	adb_url, err := get_adb_url()
 	if err != nil {
 		return err
 	}
 	dl_path := filepath.Join("bin", "adb.zip")
+	println(Info("Attempting local ADB installation"))
 	// download zip file
 	if err = DownloadFile(adb_url, dl_path); err != nil {
+		// delete zip file
+		os.Remove(dl_path)
 		return err
 	}
-	// extract contents
-	if Unzip(dl_path, ".") != nil {
+	if err = Unzip(dl_path, "."); err != nil {
+		// delete zip file
+		os.Remove(dl_path)
 		return err
 	}
 	// delete zip file
-	if os.RemoveAll(dl_path) != nil {
-		return err
-	}
-	fmt.Println("ADB installed successfully for use by Roidy")
+	os.RemoveAll(dl_path)
+	println(Info("ADB installed successfully ✔"))
 	return nil
+}
+
+type Config struct {
+	Adb bool `json:"adb,omitempty"`
+}
+
+func checker() {
+
+}
+
+func VetAdb() error {
+	config_file, err := os.ReadFile("config.json")
+	// config.json exist, run check
+	if err == nil {
+		// parse json and check adb
+		var config Config
+		json.Unmarshal(config_file, &config)
+		if !config.Adb {
+			// run check
+			if err := checkAdb(); err != nil {
+				return err
+			} else {
+				// add adb to config
+				config.Adb = true
+				final_bytes, _ := json.Marshal(config)
+				os.WriteFile("config.json", final_bytes, 0644)
+				return nil
+			}
+		}
+		// adb was previously located
+		return nil
+	// config.json does not exist, run check then create it
+	} else {
+		if err := checkAdb(); err != nil {
+			return err
+		} else {
+			config_bytes, _ := json.Marshal(Config{
+				Adb: true,
+			})
+			os.WriteFile("config.json", config_bytes, 0644)
+			return nil
+		}
+	}
 }
