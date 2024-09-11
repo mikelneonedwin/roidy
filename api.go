@@ -4,6 +4,7 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
+	"mime"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -180,8 +181,8 @@ func Api() *mux.Router {
 			// serve index.html if file does not exist
 			file, _ = assets.ReadFile("dist/index.html")
 		}
+		w.Header().Set("Content-Type", mime.TypeByExtension(filepath.Ext(path)))
 		// Set the Content-Type header
-		w.Header().Set("Content-Type", http.DetectContentType(file))
 		// Write the byte slice to the ResponseWriter
 		w.Write(file)
 	})

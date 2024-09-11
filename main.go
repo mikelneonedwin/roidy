@@ -30,6 +30,6 @@ func main() {
 		panic(err)
 	}
 
-	Server(nil)
 	println(utils.Info("Initializing server"))
+	Server(nil)
 }
