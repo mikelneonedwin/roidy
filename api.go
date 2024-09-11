@@ -176,12 +176,13 @@ func Api() *mux.Router {
 	router.HandleFunc("/{path:.*}", func(w http.ResponseWriter, r *http.Request) {
 		path := mux.Vars(r)["path"]
 		// Serve files from the embedded file system
+		w.Header().Set("Content-Type", mime.TypeByExtension(filepath.Ext(path)))
 		file, err := assets.ReadFile("dist/" + path)
 		if err != nil {
 			// serve index.html if file does not exist
 			file, _ = assets.ReadFile("dist/index.html")
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		}
-		w.Header().Set("Content-Type", mime.TypeByExtension(filepath.Ext(path)))
 		// Set the Content-Type header
 		// Write the byte slice to the ResponseWriter
 		w.Write(file)
