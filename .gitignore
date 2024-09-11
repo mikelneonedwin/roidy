@@ -28,7 +28,6 @@ vite.config.ts.*
 i.ts
 i.js
 log.json
-bin
 notes.txt
 platform-tools
 test.html
@@ -37,3 +36,4 @@ i.cmd
 *roidy*
 *.exe
 config.json
+.bin

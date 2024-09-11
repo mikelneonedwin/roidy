@@ -1,13 +1,12 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	shell "os/exec"
-	"path/filepath"
 	"runtime"
 	"strings"
-	"errors"
 )
 
 type Cmd struct {
@@ -41,7 +40,7 @@ func wrap(cmd string) (string, error) {
 		data:  data,
 	})
 	os.WriteFile(
-		filepath.Join("..", "..", "log.json"), 
+		"log.json", 
 		[]byte(data), 
 		0644,
 	)

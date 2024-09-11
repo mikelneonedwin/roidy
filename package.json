@@ -11,7 +11,7 @@
     "platform-tools": "https://developer.android.com/tools/releases/platform-tools"
   },
   "scripts": {
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node build.js",
     "bun": "bun --watch run server/index.ts",
     "dev": "vite --host",
     "lint": "eslint .",

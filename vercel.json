@@ -1,0 +1,16 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "builds": [
+        {
+            "src": "**/*.go",
+            "use": "@vercel/go"
+        },
+        {
+            "src": "package.json",
+            "use": "@vercel/node"
+        }
+    ],
+    "installCommand": "npm install && go mod download",
+    "buildCommand": "npm run build",
+    "outputDir": "dist"
+}
