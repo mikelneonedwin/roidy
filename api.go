@@ -176,13 +176,9 @@ func Api() *mux.Router {
 		path := mux.Vars(r)["path"]
 		// Serve files from the embedded file system
 		file, err := assets.ReadFile("dist/" + path)
-		println("PATH:"+path)
 		if err != nil {
 			// serve index.html if file does not exist
 			file, _ = assets.ReadFile("dist/index.html")
-			println("Serving index.html")
-		} else {
-			println("Serving actual file")
 		}
 		// Set the Content-Type header
 		w.Header().Set("Content-Type", http.DetectContentType(file))
