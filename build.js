@@ -20,8 +20,8 @@ function logProgress() {
     binariesBuilt++;
     const progress = binariesBuilt / targets.length * 100
     process.stdout.write(
-        "\rCreating executables" +
-        `\t${progress}%\t` +
+        "\rCreating executables\t" +
+        chalk.cyan(progress.toFixed(2) + "%\t") +
         chalk.yellow(binariesBuilt) +
         " of "
         + chalk.yellow(targets.length)
